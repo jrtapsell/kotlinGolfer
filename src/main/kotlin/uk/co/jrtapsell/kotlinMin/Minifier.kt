@@ -9,10 +9,10 @@ object Minifier {
 
     fun minify(submissionLines: List<String>): String {
         val subMinLines = submissionLines.map {
-            var output = it.trim()
-            NO_WS_SPACE_OPS.forEach { output = output.replace(it.first, it.second) }
-            output = output.replace(Regex("//.*"), "")
-            output = output.replace(Regex("/\\*.*\\*/"), "")
+            var output = it.trim() // Ending and starting spaces cannot have meaning
+            NO_WS_SPACE_OPS.forEach { output = output.replace(it.first, it.second) } // Some operators never need spaces
+            output = output.replace(Regex("//.*"), "") // Strip out line comments
+            output = output.replace(Regex("/\\*.*\\*/"), "") // Strip out block comments
             output
         }.filter { it.isNotEmpty() }
 
@@ -26,7 +26,7 @@ object Minifier {
                     NO_LINE_BEFORE.filter { subMinLines[index + 1].startsWith(it) }.any()
 
             if (!canSkipThis && !canSkipOther) {
-                outText += "\n"
+                outText += System.lineSeparator()
             }
             outText
         }.joinToString("")
