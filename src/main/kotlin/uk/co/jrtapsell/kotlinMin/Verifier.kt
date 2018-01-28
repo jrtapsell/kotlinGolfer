@@ -3,9 +3,6 @@ package uk.co.jrtapsell.kotlinMin
 import uk.co.jrtapsell.kotlinMin.WarnLevel.FAIL
 import uk.co.jrtapsell.kotlinMin.WarnLevel.WARN
 
-/**
- * @author James Tapsell
- */
 object Verifier {
 
     class MessagedRegex(val level: WarnLevel, val message: String, pattern: String) {

@@ -7,18 +7,26 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.logging.Logger
-import kotlin.system.exitProcess
-class CommandLine (var name:String){
-    var LOG = Logger.getLogger(name)!!
+
+/**
+ * Runs the tool.
+ *
+ * @param name
+ *  The path of the file to run on.
+ */
+class CommandLine (private var name:String){
+    private var logger = Logger.getLogger(name)!!
 
     companion object {
+        /** The main method, creates a [CommandLine] and runs it. */
         @JvmStatic
         fun main(args: Array<String>) {
             CommandLine(args[0]).run()
         }
     }
+    /** Runs the tool. */
     fun run() {
-        LOG.info("Processing $name")
+        logger.info("Processing $name")
         val input = Paths.get(name)
         val outDir = input.resolveSibling("output")
         outDir.makeDirIfNotExists()
@@ -38,7 +46,7 @@ class CommandLine (var name:String){
         val codeWriter = PrintWriter(outCodeFile.toFile())
 
         runAnalysis(allRawLines, postWriter, codeWriter, fileName)
-        LOG.info("Completed $name")
+        logger.info("Completed $name")
     }
 
     private fun runAnalysis(allRawLines: List<String>, postWriter: PrintWriter, codeWriter: PrintWriter, fileName: String) {
@@ -48,11 +56,11 @@ class CommandLine (var name:String){
         val subEnd = noHistory.indexOf("//ENDSUB")
 
         if (subStart == -1) {
-            LOG.severe("//STARTSUB missing")
+            logger.severe("//STARTSUB missing")
             return
         }
         if (subEnd == -1) {
-            LOG.severe("//ENDSUB missing")
+            logger.severe("//ENDSUB missing")
             return
         }
 
@@ -65,8 +73,8 @@ class CommandLine (var name:String){
         if (messages.isNotEmpty()) {
             messages.forEach {
                 when (it.level) {
-                    WarnLevel.FAIL -> LOG.severe("on line ${it.line}\n\t${it.message}")
-                    WarnLevel.WARN -> LOG.info("on line ${it.line}\n\t${it.message}")
+                    WarnLevel.FAIL -> logger.severe("on line ${it.line}\n\t${it.message}")
+                    WarnLevel.WARN -> logger.info("on line ${it.line}\n\t${it.message}")
                     WarnLevel.OK -> throw AssertionError("OK warning?")
                 }
             }
@@ -77,7 +85,7 @@ class CommandLine (var name:String){
 
         val submission = Minifier.minify(submissionLines)
 
-        val historyRegex = Regex("""([0-9]+)\(([^)]+)\)\[([0-9]+)\]""")
+        val historyRegex = Regex("""([0-9]+)\(([^)]+)\)\[([0-9]+)]""")
         val history = allRawLines.firstOrNull {it.startsWith("//HISTORY")}?.substring(10)
         data class History(val count: Int, val username: String, val id: Int)
         val historyData = if (history != null) {

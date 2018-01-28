@@ -5,18 +5,15 @@ import java.nio.charset.Charset
 import java.util.*
 import java.util.zip.Deflater
 
-/**
- * @author James Tapsell
- */
 object TIO {
     val sep = '\u00ff'
 
-    fun encode(input:String): String {
+    private fun encode(input:String): String {
         val temp = deflate(input)
         return Base64.getEncoder().withoutPadding().encodeToString(temp)
     }
 
-    fun deflate(input: String): ByteArray {
+    private fun deflate(input: String): ByteArray {
         val deflater = Deflater(9)
         deflater.setInput(toByteArray(input))
         deflater.finish()
@@ -33,9 +30,10 @@ object TIO {
         return temp
     }
 
-    fun toByteArray(input: String) =
+    private fun toByteArray(input: String) =
             input.map { it.toByte() }.toByteArray()
 
+    /** Creates a link to a submission with the given contents. */
     fun makeURL(header: String, code: String, footer: String): String {
         return "https://tio.run/##" + encode("kotlin$sep$header$sep$code$sep$footer$sep")
     }
