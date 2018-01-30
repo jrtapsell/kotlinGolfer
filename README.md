@@ -14,3 +14,9 @@ A simple tool that takes in human readable Kotlin code, and returns markdown tha
 * Detection of some optimisations to improve score
 
 ## Example files
+
+Example files can be found in the docs directory
+
+## Running
+
+You want to launch the class `uk.co.jrtapsell.kotlinMin.CommandLine` with 1 argument, which should be the path of the input files. The output files will be in an output folder in the same directory.
