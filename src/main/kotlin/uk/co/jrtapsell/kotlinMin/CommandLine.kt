@@ -85,14 +85,14 @@ class CommandLine (private var name:String){
 
         val submission = Minifier.minify(submissionLines)
 
-        val historyRegex = Regex("""([0-9]+)\(([^)]+)\)\[([0-9]+)]""")
+        val historyRegex = Regex("""([0-9]+)\(([^)]+)\)\[([0-9]+)]\{([^}]+)}""")
         val history = allRawLines.firstOrNull {it.startsWith("//HISTORY")}?.substring(10)
-        data class History(val count: Int, val username: String, val id: Int)
+        data class History(val count: Int, val username: String, val id: Int, val description: String)
         val historyData = if (history != null) {
             val historyData = history.split(",")
                 .map {
-                    val (_, countText, username, idText) = historyRegex.matchEntire(it)!!.groupValues
-                    History(countText.toInt(10), username, idText.toInt(10))
+                    val (_, countText, username, idText, description) = historyRegex.matchEntire(it)!!.groupValues
+                    History(countText.toInt(10), username, idText.toInt(10), description)
                 }
             historyData
         } else {
@@ -132,7 +132,7 @@ class CommandLine (private var name:String){
                 it.println("## Edits")
                 var current = subSize
                 for (i in historyData) {
-                    it.println("- ${current - i.count} [${i.username}](https://codegolf.stackexchange.com/users/${i.id})")
+                    it.println("- ${current - i.count} [${i.username}](https://codegolf.stackexchange.com/users/${i.id}) - ${i.description}")
                     current = i.count
                 }
             }

@@ -1,2 +1,3 @@
 rootProject.name = 'kotlinGolfer'
+include 'local'
 

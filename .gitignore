@@ -1,9 +1,7 @@
 ## Hand made section
 
-# Files for validating test code
-data 
-# Local examples
-src/main/examples
+# Local submodule for testing
+local
 
 ## End of hand made section
 

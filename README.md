@@ -14,5 +14,3 @@ A simple tool that takes in human readable Kotlin code, and returns markdown tha
 * Detection of some optimisations to improve score
 
 ## Example files
-
-*Coming soon*
